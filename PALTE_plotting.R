@@ -24,41 +24,55 @@ P2_pretty_plot <- P2_pretty[,7:11]
 P3_pretty_plot <- P3_pretty[,7:11]
 
 
+#change the column names so that we are working in generations
+colnames(B1_pretty_plot) <- c("0","113","167","293","440","500","600")
+colnames(B2_pretty_plot) <- c("0","113","167","293","440","500","600")
+colnames(B3_pretty_plot) <- c("0","113","167","293","440","500","600")
+
+colnames(P1_pretty_plot) <- c("0","113","293","500","600")
+colnames(P2_pretty_plot) <- c("0","113","293","500","600")
+colnames(P3_pretty_plot) <- c("0","113","293","500","600")
+
+
+
+b_generations <- c(0,113,167,293,440,500,600)
+p_generations <- c(0,113,293,500,600)
+
+
 layout(matrix(c(1,2,3,4,5,6),2))
 
 
-plot(NA, xlim=c(0,90), ylim=c(0,100), ylab = "Frequency", xlab = "Time (Days)", main = "B1") #, main = "Mutation frequencies over time") # 
+plot(NA, xlim=c(0,600), ylim=c(0,100), ylab = "Frequency", xlab = "Generations", main = "B1") #, main = "Mutation frequencies over time") # 
 for(i in seq_len(nrow(B1_pretty_plot))){
-  lines(c(0,17,25,44,66,75,90),B1_pretty_plot[i,], type="l", col=i)
+  lines(b_generations,B1_pretty_plot[i,], type="l", col=i)
 } #need to get them colored differently, but will work for now. 
 
 
-plot(NA, xlim=c(0,90), ylim=c(0,100), ylab = "Frequency", xlab = "Time (Days)", main = "P1") #, main = "Mutation frequencies over time") # 
+plot(NA, xlim=c(0,600), ylim=c(0,100), ylab = "", xlab = "", main = "P1") #, main = "Mutation frequencies over time") # 
 for(i in seq_len(nrow(P1_pretty_plot))){
-  lines(c(0,17,44,75,90),P1_pretty_plot[i,], type="l", col=i)
+  lines(p_generations,P1_pretty_plot[i,], type="l", col=i)
 } #need to get them colored differently, but will work for now. 
 
 
-plot(NA, xlim=c(0,90), ylim=c(0,100), ylab = "Frequency", xlab = "Time (Days)", main = "B2") #, main = "Mutation frequencies over time") # 
+plot(NA, xlim=c(0,600), ylim=c(0,100), ylab = "", xlab = "", main = "B2") #, main = "Mutation frequencies over time") # 
 for(i in seq_len(nrow(B2_pretty_plot))){
-  lines(c(0,17,25,44,66,75,90),B2_pretty_plot[i,], type="l", col=i)
+  lines(b_generations,B2_pretty_plot[i,], type="l", col=i)
 } #need to get them colored differently, but will work for now. 
 
-plot(NA, xlim=c(0,90), ylim=c(0,100), ylab = "Frequency", xlab = "Time (Days)", main = "P2") #, main = "Mutation frequencies over time") # 
+plot(NA, xlim=c(0,600), ylim=c(0,100), ylab = "", xlab = "", main = "P2") #, main = "Mutation frequencies over time") # 
 for(i in seq_len(nrow(P2_pretty_plot))){
-  lines(c(0,17,44,75,90),P2_pretty_plot[i,], type="l", col=i)
+  lines(p_generations,P2_pretty_plot[i,], type="l", col=i)
 } #need to get them colored differently, but will work for now.
 
-plot(NA, xlim=c(0,90), ylim=c(0,100), ylab = "Frequency", xlab = "Time (Days)", main = "B3") #, main = "Mutation frequencies over time") # 
+plot(NA, xlim=c(0,600), ylim=c(0,100), ylab = "", xlab = "", main = "B3") #, main = "Mutation frequencies over time") # 
 for(i in seq_len(nrow(B3_pretty_plot))){
-  lines(c(0,17,25,44,66,75,90),B3_pretty_plot[i,], type="l", col=i)
+  lines(b_generations,B3_pretty_plot[i,], type="l", col=i)
 } #need to get them colored differently, but will work for now. 
 
-plot(NA, xlim=c(0,90), ylim=c(0,100), ylab = "Frequency", xlab = "Time (Days)", main = "P3") #, main = "Mutation frequencies over time") # 
+plot(NA, xlim=c(0,600), ylim=c(0,100), ylab = "", xlab = "", main = "P3") #, main = "Mutation frequencies over time") # 
 for(i in seq_len(nrow(P3_pretty_plot))){
-  lines(c(0,17,44,75,90),P3_pretty_plot[i,], type="l", col=i)
+  lines(p_generations,P3_pretty_plot[i,], type="l", col=i)
 } #need to get them colored differently, but will work for now. 
-
 
 
 
@@ -82,6 +96,14 @@ P2_cohort_lineage <- P2_pythoncohorts[,-1]
 P3_cohort_lineage <- P3_pythoncohorts[,-1]
 
 
+b1_cohort_lineage_2 <- B1_cohort_lineage *100
+b2_cohort_lineage_2 <- B2_cohort_lineage *100
+b3_cohort_lineage_2 <- B3_cohort_lineage *100
+p1_cohort_lineage_2 <- P1_cohort_lineage *100
+p2_cohort_lineage_2 <- P2_cohort_lineage *100
+p3_cohort_lineage_2 <- P3_cohort_lineage *100
+
+
 View(P1_cohort_lineage)
 View(B2_cohort_lineage)
 View(B2_pythoncohorts)
@@ -89,32 +111,39 @@ View(B2_pythoncohorts)
 
 layout(matrix(c(1,2,3,4,5,6),2))
 
-plot(NA, xlim=c(0,90), ylim=c(0,1), ylab = "Frequency", xlab = "Time (Days)", main = "B1") #, main = "Mutation frequencies over time") # 
-for(i in seq_len(nrow(B1_cohort_lineage))){
-  lines(c(0,17,25,44,66,75,90),B1_cohort_lineage[i,], type="l", col=i)
+plot(NA, xlim=c(0,600), ylim=c(0,100), ylab = "Frequency", xlab = "Time (Days)", main = "B1") #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(b1_cohort_lineage_2))){
+  lines(b_generations,b1_cohort_lineage_2[i,], type="l", col=i)
 } #need to get them colored differently, but will work for now. 
 
-plot(NA, xlim=c(0,90), ylim=c(0,1), ylab = "Frequency", xlab = "Time (Days)", main = "P1") #, main = "Mutation frequencies over time") # 
-for(i in seq_len(nrow(P1_cohort_lineage))){
-  lines(c(0,17,44,75,90),P1_cohort_lineage[i,], type="l", col=i)
+plot(NA, xlim=c(0,600), ylim=c(0,100), ylab = "", xlab = "", main = "P1") #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(p1_cohort_lineage_2))){
+  lines(p_generations,p1_cohort_lineage_2[i,], type="l", col=i)
 } #need to get them colored differently, but will work for now. 
 
-plot(NA, xlim=c(0,90), ylim=c(0,1), ylab = "Frequency", xlab = "Time (Days)", main = "B2") #, main = "Mutation frequencies over time") # 
-for(i in seq_len(nrow(B2_cohort_lineage))){
-  lines(c(0,17,25,44,66,75,90),B2_cohort_lineage[i,], type="l", col=i)
+plot(NA, xlim=c(0,600), ylim=c(0,100), ylab = "", xlab = "", main = "B2") #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(b2_cohort_lineage_2))){
+  lines(b_generations,b2_cohort_lineage_2[i,], type="l", col=i)
 } #need to get them colored differently, but will work for now. 
 
-plot(NA, xlim=c(0,90), ylim=c(0,1), ylab = "Frequency", xlab = "Time (Days)", main = "P2") #, main = "Mutation frequencies over time") # 
-for(i in seq_len(nrow(P2_cohort_lineage))){
-  lines(c(0,17,44,75,90),P2_cohort_lineage[i,], type="l", col=i)
+plot(NA, xlim=c(0,600), ylim=c(0,100), ylab = "", xlab = "", main = "P2") #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(p2_cohort_lineage_2))){
+  lines(p_generations,p2_cohort_lineage_2[i,], type="l", col=i)
 } #need to get them colored differently, but will work for now. 
 
-plot(NA, xlim=c(0,90), ylim=c(0,1), ylab = "Frequency", xlab = "Time (Days)", main = "B3") #, main = "Mutation frequencies over time") # 
-for(i in seq_len(nrow(B3_cohort_lineage))){
-  lines(c(0,17,25,44,66,75,90),B3_cohort_lineage[i,], type="l", col=i)
+plot(NA, xlim=c(0,600), ylim=c(0,100), ylab = "", xlab = "", main = "B3") #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(b3_cohort_lineage_2))){
+  lines(b_generations,b3_cohort_lineage_2[i,], type="l", col=i)
 } #need to get them colored differently, but will work for now. 
 
-plot(NA, xlim=c(0,90), ylim=c(0,1), ylab = "Frequency", xlab = "Time (Days)", main = "P3") #, main = "Mutation frequencies over time") # 
-for(i in seq_len(nrow(P3_cohort_lineage))){
-  lines(c(0,17,44,75,90),P3_cohort_lineage[i,], type="l", col=i)
+plot(NA, xlim=c(0,600), ylim=c(0,100), ylab = "", xlab = "", main = "P3") #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(p3_cohort_lineage_2))){
+  lines(p_generations,p3_cohort_lineage_2[i,], type="l", col=i)
 } #need to get them colored differently, but will work for now. 
+
+
+
+
+
+
+###now to see if I can extract the cohort members from the rows of frequency data 
