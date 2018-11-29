@@ -458,10 +458,6 @@ Mutations_analysis(B1, "Description", "Mutation")
 
 
 
-
-
-
-
 #see what the last filter took out to make sure the mutations are what I want them to be. This check needs to be done on all mutations that are taken out from step 1 on.
 filter62_removed <- (subset(B1_filter5, abs(B1_filter5$"17"-B1_filter5$"90") < 10))
 View(filter62_removed)#yay it removed what I wanted it to!!
