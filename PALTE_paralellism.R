@@ -1780,3 +1780,76 @@ write.csv (plank_diversity, file = "/Users/katrina/Desktop/muller_v_0.3/diversit
 
 
 
+
+
+########
+#just trying to plot all mutations in the populations frequencies
+
+#start with B1
+B1_NT <- B1[,17:23]
+B2_NT <- B2[,17:23]
+B3_NT <- B3[,17:23]
+P1_NT <- P1[,17:21]
+P2_NT <- P2[,17:21]
+P3_NT <- P3[,17:21]
+
+
+#change the column names so that we are working in generations
+colnames(B1_NT) <- c("0","113","167","293","440","500","600")
+colnames(B2_NT) <- c("0","113","167","293","440","500","600")
+colnames(B3_NT) <- c("0","113","167","293","440","500","600")
+
+colnames(P1_NT) <- c("0","113","293","500","600")
+colnames(P2_NT) <- c("0","113","293","500","600")
+colnames(P3_NT) <- c("0","113","293","500","600")
+
+
+
+b_generations <- c(0,113,167,293,440,500,600)
+p_generations <- c(0,113,293,500,600)
+
+layout(matrix(c(1,2,3,4,5,6),2))
+
+plot(NA, xlim=c(0,600), ylim=c(0,1), ylab = "Frequency", xlab = "Generations", main = "B1") #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(B1_NT))){
+  lines(b_generations,B1_NT[i,], type="l", col=i)
+} #need to get them colored differently, but will work for now. 
+
+
+plot(NA, xlim=c(0,600), ylim=c(0,1), ylab = "", xlab = "", main = "P1") #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(P1_NT))){
+  lines(p_generations,P1_NT[i,], type="l", col=i)
+} #need to get them colored differently, but will work for now. 
+
+
+plot(NA, xlim=c(0,600), ylim=c(0,1), ylab = "", xlab = "", main = "B2") #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(B2_NT))){
+  lines(b_generations,B2_NT[i,], type="l", col=i)
+} #need to get them colored differently, but will work for now. 
+
+plot(NA, xlim=c(0,600), ylim=c(0,1), ylab = "", xlab = "", main = "P2") #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(P2_NT))){
+  lines(p_generations,P2_NT[i,], type="l", col=i)
+} #need to get them colored differently, but will work for now.
+
+plot(NA, xlim=c(0,600), ylim=c(0,1), ylab = "", xlab = "", main = "B3") #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(B3_NT))){
+  lines(b_generations,B3_NT[i,], type="l", col=i)
+} #need to get them colored differently, but will work for now. 
+
+plot(NA, xlim=c(0,600), ylim=c(0,1), ylab = "", xlab = "", main = "P3") #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(P3_NT))){
+  lines(p_generations,P3_NT[i,], type="l", col=i)
+} #need to get them colored differently, but will work for now. 
+
+
+
+
+
+
+
+
+
+
+
+
