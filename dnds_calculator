@@ -1,0 +1,16 @@
+    import pandas
+    filename  = Path("/home/cld100/Documents/github/biotools/codons.csv")
+    codon_table = pandas.read_csv(filename, sep = '\t')
+    acids = AminoAcids()
+
+    synonymous = nonsynonymous = 0
+    for index, row in codon_table.iterrows():
+        codon = row['codon']
+        number = row['number']
+
+        synonymous_sites, nonsynonymous_sites = acids.get_sites(codon)
+
+        synonymous += synonymous_sites * number
+        nonsynonymous += nonsynonymous_sites * number
+
+    print(nonsynonymous / synonymous)
