@@ -69,6 +69,88 @@ P2 <- P2[!(P2$P_P2 == 0),] #remove all cases that are not detected in the plankt
 
 #plot the 4 populations with biofilm selection on the x axis and planktonic selection on the y axis. Just looking at all mutations in the data set. 
 
+#import all of the data sets: 
+B1 <- read.csv("/Users/katrina/Desktop/201016_ecological_interactions/B1.csv", stringsAsFactors = F)
+B1 <- B1[!(B1$B_B1 == 0),] #remove all cases that are not detected in the biofilm regime
+B1 <- B1[!(B1$P_B1 == 0),] #remove all cases that are not detected in the planktonic regime.
+
+B2 <- read.csv("/Users/katrina/Desktop/201016_ecological_interactions/B2.csv", stringsAsFactors = F)
+B2 <- B2[!(B2$B_B2 == 0),] #remove all cases that are not detected in the biofilm regime
+B2 <- B2[!(B2$P_B2 == 0),] #remove all cases that are not detected in the planktonic regime.
+
+
+P1 <- read.csv("/Users/katrina/Desktop/201016_ecological_interactions/P1.csv", stringsAsFactors = F)
+P1 <- P1[!(P1$B_P1 == 0),] #remove all cases that are not detected in the biofilm regime
+P1 <- P1[!(P1$P_P1 == 0),] #remove all cases that are not detected in the planktonic regime.
+
+
+P2 <- read.csv("/Users/katrina/Desktop/201016_ecological_interactions/P2.csv", stringsAsFactors = F)
+P2 <- P2[!(P2$B_P2 == 0),] #remove all cases that are not detected in the biofilm regime
+P2 <- P2[!(P2$P_P2 == 0),] #remove all cases that are not detected in the planktonic regime.
+
+
+
+#trying to detect outliars using a multivariate approach
+#starting with B1 population
+mod <- lm(B1[,2] ~ B1[,3]) #calculating a linear regression for the data
+cooksd <- cooks.distance(mod) #calculating cooks distance - generally those data points that have a cooks distance 4 or greater, are influential, or outliars. 
+
+outliar_criteria <- 4*mean(cooksd, na.rm=T)
+B1$cooksd <- cooksd
+B1$significant <- cooksd>=outliar_criteria
+write.csv(B1, "/Users/katrina/Desktop/201016_ecological_interactions/cooksd/B1_cooksd.csv")
+
+plot(cooksd, pch="*", cex=2, main="Influential Obs by Cooks distance: B1")  # plot cook's distance
+abline(h = 4*mean(cooksd, na.rm=T), col="red")  # add cutoff line
+text(x=1:length(cooksd)+1, y=cooksd, labels=ifelse(cooksd>4*mean(cooksd, na.rm=T),names(cooksd),""), col="red")  # add labels
+
+
+
+#starting with B2 population
+mod <- lm(B2[,2] ~ B2[,3]) #calculating a linear regression for the data
+cooksd <- cooks.distance(mod) #calculating cooks distance - generally those data points that have a cooks distance 4 or greater, are influential, or outliars. 
+
+outliar_criteria <- 4*mean(cooksd, na.rm=T)
+B2$cooksd <- cooksd
+B2$significant <- cooksd>=outliar_criteria
+write.csv(B2, "/Users/katrina/Desktop/201016_ecological_interactions/cooksd/B2_cooksd.csv")
+
+plot(cooksd, pch="*", cex=2, main="Influential Obs by Cooks distance: B2")  # plot cook's distance
+abline(h = 4*mean(cooksd, na.rm=T), col="red")  # add cutoff line
+text(x=1:length(cooksd)+1, y=cooksd, labels=ifelse(cooksd>4*mean(cooksd, na.rm=T),names(cooksd),""), col="red")  # add labels
+
+
+
+#starting with P1 population
+mod <- lm(P1[,2] ~ P1[,3]) #calculating a linear regression for the data
+cooksd <- cooks.distance(mod) #calculating cooks distance - generally those data points that have a cooks distance 4 or greater, are influential, or outliars. 
+
+outliar_criteria <- 4*mean(cooksd, na.rm=T)
+P1$cooksd <- cooksd
+P1$significant <- cooksd>=outliar_criteria
+write.csv(P1, "/Users/katrina/Desktop/201016_ecological_interactions/cooksd/P1_cooksd.csv")
+
+plot(cooksd, pch="*", cex=2, main="Influential Obs by Cooks distance: P1")  # plot cook's distance
+abline(h = 4*mean(cooksd, na.rm=T), col="red")  # add cutoff line
+text(x=1:length(cooksd)+1, y=cooksd, labels=ifelse(cooksd>4*mean(cooksd, na.rm=T),names(cooksd),""), col="red")  # add labels
+
+
+#starting with P2 population
+mod <- lm(P2[,2] ~ P2[,3]) #calculating a linear regression for the data
+cooksd <- cooks.distance(mod) #calculating cooks distance - generally those data points that have a cooks distance 4 or greater, are influential, or outliars. 
+
+outliar_criteria <- 4*mean(cooksd, na.rm=T)
+P2$cooksd <- cooksd
+P2$significant <- cooksd>=outliar_criteria
+write.csv(P2, "/Users/katrina/Desktop/201016_ecological_interactions/cooksd/P2_cooksd.csv")
+
+plot(cooksd, pch="*", cex=2, main="Influential Obs by Cooks distance: P2")  # plot cook's distance
+abline(h = 4*mean(cooksd, na.rm=T), col="red")  # add cutoff line
+text(x=1:length(cooksd)+1, y=cooksd, labels=ifelse(cooksd>4*mean(cooksd, na.rm=T),names(cooksd),""), col="red")  # add labels
+
+
+
+
 library(ggplot2)
 theme_set(theme_bw())
 
@@ -145,8 +227,8 @@ ggplot(P2[,2:3], aes(x =B_P2, y=P_P2, size = 3)) +
 
 B1$color <- 1
 for (i in 1:nrow(B1)) {
-  if (B1[i,2] < B1[i,3])
-    B1[i,4] <- "Planktonic enriched"
+  if (B1$significant = TRUE)
+    B1[i,6] <- "Planktonic enriched"
   else if (B1[i,2] > B1[i,3])
     B1[i,4] <- "Biofilm enriched"
   else if (B1[i,2] == B1[i,3])
@@ -199,8 +281,9 @@ P2$color <- as.factor(P2$color)
 
 
 
+#plot according to significance
 
-ggplot(B1[,2:3], aes(x =B_B1, y=P_B1, size = 3, color =B1$color)) + 
+ggplot(B1[,2:3], aes(x =B_B1, y=P_B1, size = 3, color =B1$significant)) + 
   geom_point() + 
   xlab("Biofilm selection") +
   ylab("Planktonic selection") +
@@ -216,10 +299,11 @@ ggplot(B1[,2:3], aes(x =B_B1, y=P_B1, size = 3, color =B1$color)) +
   theme(axis.title.y=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())+
-  theme(plot.title = element_text(size = 40))
+  theme(plot.title = element_text(size = 40))+ 
+  scale_color_manual(values=c("Black", "Red"))
 
 
-ggplot(B2[,2:3], aes(x =B_B2, y=P_B2, size = 3, color =B2$color)) + 
+ggplot(B2[,2:3], aes(x =B_B2, y=P_B2, size = 3, color =B2$significant)) + 
   geom_point() + 
   xlab("Biofilm selection") +
   ylab("Planktonic selection") +
@@ -235,9 +319,10 @@ ggplot(B2[,2:3], aes(x =B_B2, y=P_B2, size = 3, color =B2$color)) +
   theme(axis.title.y=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())+
-  theme(plot.title = element_text(size = 40))
+  theme(plot.title = element_text(size = 40))+ 
+  scale_color_manual(values=c("Black", "Red"))
 
-ggplot(P1[,2:3], aes(x =B_P1, y=P_P1, size = 3, color =P1$color)) + 
+ggplot(P1[,2:3], aes(x =B_P1, y=P_P1, size = 3, color =P1$significant)) + 
   geom_point() + 
   xlab("Biofilm selection") +
   ylab("Planktonic selection") +
@@ -248,9 +333,10 @@ ggplot(P1[,2:3], aes(x =B_P1, y=P_P1, size = 3, color =P1$color)) +
   xlim(0,100)+
   theme(legend.position = "none")+
   theme(axis.text = element_text(size = 28), axis.title=element_text(size=30, face="bold"))+
-  theme(plot.title = element_text(size = 40))
+  theme(plot.title = element_text(size = 40))+ 
+  scale_color_manual(values=c("Black", "Red"))
 
-ggplot(P2[,2:3], aes(x =B_P2, y=P_P2, size = 3, color =P2$color)) + 
+ggplot(P2[,2:3], aes(x =B_P2, y=P_P2, size = 3, color =P2$significant)) + 
   geom_point() + 
   xlab("Biofilm selection") +
   ylab("Planktonic selection") +
@@ -266,7 +352,8 @@ ggplot(P2[,2:3], aes(x =B_P2, y=P_P2, size = 3, color =P2$color)) +
   theme(axis.title.y=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())+
-  theme(plot.title = element_text(size = 40))
+  theme(plot.title = element_text(size = 40))+ 
+  scale_color_manual(values=c("Black", "Red"))
 
 
 

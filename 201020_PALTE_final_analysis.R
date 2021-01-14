@@ -902,14 +902,14 @@ ancestor <- read.csv("/Users/katrina/Desktop/PALTE_final/working/KBH5_WT_Breseq_
 P1_clones <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/P1_clones.csv",stringsAsFactors = F)
 
 p1_clones_noancestor <- P1_clones[!(P1_clones$position %in% ancestor$SeqID),]
-P1_clones_filtered <- P1_clones_noanestor[(P1_clones$position %in% P1_mutations$Position),]
+P1_clones_filtered <- p1_clones_noancestor[(P1_clones$position %in% P1_mutations$Position),]
 
 unfiltered_p1_clones <- table(p1_clones_noancestor$SampleName)
 filtered_p1_clones <- table(P1_clones_filtered$SampleName)
 
 write.csv(unfiltered_p1_clones, "/Users/katrina/Desktop/PALTE_final/draft_revision_work/clones/P1_clones_unfiltered_numbers.csv")
 write.csv(filtered_p1_clones, "/Users/katrina/Desktop/PALTE_final/draft_revision_work/clones/P1_clones_filtered_numbers.csv")
-write.csv(P1_clones_filtered, "/Users/katrina/Desktop/PALTE_final/draft_revision_work/clones/P1_clones_filtered_numbers.csv")
+write.csv(p1_clones_noancestor, "/Users/katrina/Desktop/PALTE_final/draft_revision_work/clones/P1_clones_filtered.csv")
 table(p1_clones_noancestor$gene)
 
 ######
@@ -1034,4 +1034,371 @@ lines(p_generations, P3_cohort_trajectories[4,], type="l", col="red", lwd=3)
 
 
 
+
+
+######
+#looking at the extent of within population gene-level parallelism
+B1 <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/B1_200927.csv",stringsAsFactors = F)
+B2 <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/B2_200927.csv",stringsAsFactors = F)
+B3 <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/B3_200927.csv",stringsAsFactors = F)
+P1 <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/P1_200927.csv",stringsAsFactors = F)
+P2 <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/P2_200927.csv",stringsAsFactors = F)
+P3 <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/P3_200927.csv",stringsAsFactors = F)
+
+B1_within <- table(B1$Gene)
+B2_within <- table(B2$Gene)
+B3_within <- table(B3$Gene)
+P1_within <- table(P1$Gene)
+P2_within <- table(P2$Gene)
+P3_within <- table(P3$Gene)
+
+write.csv(B1_within, "/Users/katrina/Desktop/PALTE_final/draft_revision_work/B1_gene_level_parallelism.csv")
+write.csv(B2_within, "/Users/katrina/Desktop/PALTE_final/draft_revision_work/B2_gene_level_parallelism.csv")
+write.csv(B3_within, "/Users/katrina/Desktop/PALTE_final/draft_revision_work/B3_gene_level_parallelism.csv")
+write.csv(P1_within, "/Users/katrina/Desktop/PALTE_final/draft_revision_work/P1_gene_level_parallelism.csv")
+write.csv(P2_within, "/Users/katrina/Desktop/PALTE_final/draft_revision_work/P2_gene_level_parallelism.csv")
+write.csv(P3_within, "/Users/katrina/Desktop/PALTE_final/draft_revision_work/P3_gene_level_parallelism.csv")
+
+#I externally combined all of the genes with population identifiers that had 2 or more mutations. 
+within_pop_parallelism <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/withinpop_gene_level_parallelism.csv", stringsAsFactors = F)
+all_mutations <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/all_mutations_final_201031.csv", stringsAsFactors = F)
+
+#now make a document where only the parallelism cases are saved
+parallelism_within_pop <- all_mutations[(all_mutations$Gene %in% within_pop_parallelism$Gene),]
+write.csv(parallelism_within_pop, "/Users/katrina/Desktop/PALTE_final/draft_revision_work/parallelism_within_pop.csv")
+
+
+
+
+
+
+
+
+
+
+#####
+#####Now plotting the cohort trajectories fro just genotypes with within population parallelism
+
+######
+B1_cohort_trajectories <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/withinpop_genotypes/B1_200927.genotypes.csv", stringsAsFactors = F)
+B2_cohort_trajectories <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/withinpop_genotypes/B2_200927.genotypes.csv", stringsAsFactors = F)
+B3_cohort_trajectories <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/withinpop_genotypes/B3_200927.genotypes.csv", stringsAsFactors = F)
+
+P1_cohort_trajectories <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/withinpop_genotypes/P1_200927.genotypes.csv", stringsAsFactors = F)
+P2_cohort_trajectories <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/withinpop_genotypes/P2_200927.genotypes.csv", stringsAsFactors = F)
+P3_cohort_trajectories <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/withinpop_genotypes/P3_200927.genotypes.csv", stringsAsFactors = F)
+
+B1_cohort_trajectories <- B1_cohort_trajectories[,2:8]
+B2_cohort_trajectories <- B2_cohort_trajectories[,2:8]
+B3_cohort_trajectories <- B3_cohort_trajectories[,2:8]
+
+P1_cohort_trajectories <- P1_cohort_trajectories[,2:6]
+P2_cohort_trajectories <- P2_cohort_trajectories[,2:6]
+P3_cohort_trajectories <- P3_cohort_trajectories[,2:6]
+
+b_generations <- c(0,113,167,293,440,500,600)
+p_generations <- c(0,113,293,500,600)
+
+
+#B1_cohorts_edited <- B1_cohorts_edited*100
+layout(matrix(c(1,2,3,4,5,6),2))
+
+plot(NA, xlim=c(0,600), ylim=c(0,1), ylab = "Frequency", xlab = "Generations", main = "B1", cex.axis=2, cex.lab=2, cex.main=3) #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(B1_cohort_trajectories))){
+  lines(b_generations,B1_cohort_trajectories[i,], type="l", col=1)
+}
+
+
+plot(NA, xlim=c(0,600), ylim=c(0,1), ylab = "", xlab = "", main = "P1", cex.axis=2, cex.main=3) #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(P1_cohort_trajectories))){
+  lines(p_generations,P1_cohort_trajectories[i,], type="l", col=1)
+} #need to get them colored differently, but will work for now. 
+
+plot(NA, xlim=c(0,600), ylim=c(0,1), ylab = "", xlab = "", main = "B2", cex.axis=2, cex.main=3) #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(B2_cohort_trajectories))){
+  lines(b_generations,B2_cohort_trajectories[i,], type="l", col=1)
+} #need to get them colored differently, but will work for now. 
+
+plot(NA, xlim=c(0,600), ylim=c(0,1), ylab = "", xlab = "", main = "P2", cex.axis=2, cex.main=3) #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(P2_cohort_trajectories))){
+  lines(p_generations,P2_cohort_trajectories[i,], type="l", col=1)
+} #need to get them colored differently, but will work for now. 
+
+plot(NA, xlim=c(0,600), ylim=c(0,1), ylab = "", xlab = "", main = "B3", cex.axis=2, cex.main=3) #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(B3_cohort_trajectories))){
+  lines(b_generations,B3_cohort_trajectories[i,], type="l", col=1)
+} #need to get them colored differently, but will work for now. 
+
+plot(NA, xlim=c(0,600), ylim=c(0,1), ylab = "", xlab = "", main = "P3", cex.axis=2, cex.main=3) #, main = "Mutation frequencies over time") # 
+for(i in seq_len(nrow(P3_cohort_trajectories))){
+  lines(p_generations,P3_cohort_trajectories[i,], type="l", col=1)
+} #need to get them colored differently, but will work for now. 
+
+
+
+
+
+
+#creating a collectors curve: 
+#import the metagenomic data
+metagenomes <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/all_mutations_final_201031.csv", stringsAsFactors = F)
+
+
+metagenomes_day90 <- metagenomes[!(metagenomes$X90 == 0),]
+unique_metagenome <- table(metagenomes_day90$Position)#520
+nrow(metagenomes_day90)#583
+
+#Now split into populations
+B1 <- metagenomes[(metagenomes$Population == "B1"),]
+B2 <- metagenomes[(metagenomes$Population == "B2"),]
+B3 <- metagenomes[(metagenomes$Population == "B3"),]
+P1 <- metagenomes[(metagenomes$Population == "P1"),]
+P2 <- metagenomes[(metagenomes$Population == "P2"),]
+P3 <- metagenomes[(metagenomes$Population == "P3"),]
+
+#need number of populations and number of unique positions mutated.
+
+#for 1 population - P1
+one <- table(P1$Position) #109
+
+#for 2 populations - P1 and P2
+two_data <- rbind(P1, P2)
+two <- table(two_data$Position)#186
+
+#for 3 - all planktonic
+three_data <- rbind(two_data, P3)
+three <- table(three_data$Position) #298
+
+#for 4 - plank and B1
+four_data <- rbind(three_data, B1)
+four <- table(four_data$Position) #512
+
+#for 5 - plank, B1, and B2
+five_data <- rbind(four_data, B2)
+five <- table(five_data$Position) #648
+
+#for all 6
+six_data <- rbind(five_data, B3)
+six <- table(six_data$Position) #724
+
+
+#then do the same for clones
+B1_clones <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/B1_clone_filtered.csv", stringsAsFactors = F)
+
+named_clones <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/clones/clones_B1filter.csv", stringsAsFactors = F)
+
+P1_clones <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/clones/P1_clones_filtered.csv", stringsAsFactors = F)
+
+names <- table(P1_clones$Sample)
+PA101 <- B1_clones[(B1_clones$Sample =="PA101"),]
+PA102 <- B1_clones[(B1_clones$Sample =="PA102"),]
+PA103 <- B1_clones[(B1_clones$Sample =="PA103"),]
+PA104 <- B1_clones[(B1_clones$Sample =="PA104"),]
+PA105 <- B1_clones[(B1_clones$Sample =="PA105"),]
+PA106 <- B1_clones[(B1_clones$Sample =="PA106"),]
+PA107 <- B1_clones[(B1_clones$Sample =="PA107"),]
+PA108 <- B1_clones[(B1_clones$Sample =="PA108"),]
+PA109 <- B1_clones[(B1_clones$Sample =="PA109"),]
+PA110 <- B1_clones[(B1_clones$Sample =="PA110"),]
+PA111 <- B1_clones[(B1_clones$Sample =="PA111"),]
+PA112 <- B1_clones[(B1_clones$Sample =="PA112"),]
+PA113 <- B1_clones[(B1_clones$Sample =="PA113"),]
+PA114 <- B1_clones[(B1_clones$Sample =="PA114"),]
+PA116 <- B1_clones[(B1_clones$Sample =="PA116"),]
+PA117 <- B1_clones[(B1_clones$Sample =="PA117"),]
+PA118 <- B1_clones[(B1_clones$Sample =="PA118"),]
+PA119 <- B1_clones[(B1_clones$Sample =="PA119"),]
+PA121 <- B1_clones[(B1_clones$Sample =="PA121"),]
+
+PA20 <- named_clones[(named_clones$Sample =="20"),]
+PA21 <- named_clones[(named_clones$Sample =="21"),]
+PA22 <- named_clones[(named_clones$Sample =="22"),]
+PA23 <- named_clones[(named_clones$Sample =="23"),]
+PA24 <- named_clones[(named_clones$Sample =="24"),]
+PA25 <- named_clones[(named_clones$Sample =="25"),]
+PA26 <- named_clones[(named_clones$Sample =="26"),]
+
+
+KBH110 <- P1_clones[(P1_clones$SampleName == "KBH_110"),]
+KBH111 <- P1_clones[(P1_clones$SampleName == "KBH_111"),]
+KBH112 <- P1_clones[(P1_clones$SampleName == "KBH_112"),]
+KBH113 <- P1_clones[(P1_clones$SampleName == "KBH_113"),]
+KBH114 <- P1_clones[(P1_clones$SampleName == "KBH_114"),]
+KBH115 <- P1_clones[(P1_clones$SampleName == "KBH_115"),]
+KBH116 <- P1_clones[(P1_clones$SampleName == "KBH_116"),]
+KBH117 <- P1_clones[(P1_clones$SampleName == "KBH_117"),]
+KBH118 <- P1_clones[(P1_clones$SampleName == "KBH_118"),]
+KBH119 <- P1_clones[(P1_clones$SampleName == "KBH_119"),]
+
+
+#now find the number of unique positons
+#starting with planktonic
+one <- table(KBH110$position)#14
+
+two_data <- rbind(KBH110, KBH111)
+two <- table(two_data$position)#28
+
+three_data <- rbind(two_data, KBH112)
+three <- table(three_data$position)#29
+
+four_data <- rbind(three_data, KBH113)
+four <- table(four_data$position)#29
+
+five_data <- rbind(four_data, KBH114)
+five <- table(five_data$position)#33
+
+six_data <- rbind(five_data, KBH115)
+six <- table(six_data$position)#35
+
+seven_data <- rbind(six_data, KBH116)
+seven <- table(seven_data$position)#36
+
+eight_data <- rbind(seven_data, KBH117)
+eight <- table(eight_data$position)#36
+
+nine_data <- rbind(eight_data, KBH118)
+nine <- table(nine_data$position)#37
+
+ten_data <- rbind(nine_data, KBH119)
+ten <- table(ten_data$position)#45
+ten_data <- ten_data[,1:8] #need to change so that the columns are the same between this data set and the next data set
+colnames(ten_data) <- colnames(PA20) #and changing the column names so that I can rbind
+
+eleven_data <- rbind(ten_data, PA20)
+eleven <- table(eleven_data$Position)#115
+
+twelve_data <- rbind(eleven_data, PA21)
+twelve <- table(twelve_data$Position)#115
+
+thirteen_data <- rbind(twelve_data, PA22)
+thirteen<- table(thirteen_data$Position)#128
+
+fourteen_data <- rbind(thirteen_data, PA23)
+fourteen<- table(fourteen_data$Position)#128
+
+fifteen_data <- rbind(fourteen_data, PA24)
+fifteen<- table(fifteen_data$Position)#128
+
+sixteen_data <- rbind(fifteen_data, PA25)
+sixteen<- table(sixteen_data$Position)#138
+
+seventeen_data <- rbind(sixteen_data, PA26)
+seventeen<- table(seventeen_data$Position)#138
+
+seventeen_data <- rbind(sixteen_data, PA26)
+seventeen<- table(seventeen_data$Position)#138
+
+
+
+eightteen_data <- rbind(seventeen_data, PA101)
+eightteen<- table(eightteen_data$Position)#157
+
+nineteen_data <- rbind(eightteen_data, PA102)
+nineteen<- table(nineteen_data$Position)#157
+
+twenty_data <- rbind(nineteen_data, PA103)
+twenty <- table(twenty_data$Position)#157
+
+twentyone_data <- rbind(twenty_data, PA104)
+twentyone <- table(twentyone_data$Position)#157
+
+twentytwo_data <- rbind(twentyone_data, PA105)
+twentytwo <- table(twentytwo_data$Position)#157
+
+twentytwo_data <- rbind(twentyone_data, PA106)
+twentytwo <- table(twentytwo_data$Position)#157
+
+
+
+P1_clones_2 <- P1_clones[,1:8]
+colnames(P1_clones_2) <- colnames(B1_clones)
+
+all_clones <- rbind(P1_clones_2, B1_clones, named_clones)
+all <- table(all_clones$Position)  #161 total number of unique sites mutated
+nrow(all_clones) #1377 total number of mutations
+all_table <- table(all_clones$Sample)
+
+
+
+
+
+
+#determining the number of mutations and the number of fixation events at each time point
+metagenomes <- read.csv("/Users/katrina/Desktop/PALTE_final/draft_revision_work/all_mutations_final_201031.csv", stringsAsFactors = F)
+
+B1 <- metagenomes[(metagenomes$Population == "B1"),]
+B1_17 <- B1[(B1$X17 > 0),]
+B1_17_fixed <- B1_17[(B1_17$X17 == 1),]
+B1_25 <- B1[(B1$X25 > 0),]
+B1_25_fixed <- B1_25[(B1_25$X25 == 1),]
+B1_44 <- B1[(B1$X44 > 0),]
+B1_44_fixed <- B1_44[(B1_44$X44 == 1),] #11
+B1_66 <- B1[(B1$X66 > 0),]
+B1_66_fixed <- B1_66[(B1_66$X66 == 1),]
+B1_75 <- B1[(B1$X75 > 0),]
+B1_75_fixed <- B1_75[(B1_75$X75 == 1),] #19
+B1_90 <- B1[(B1$X90 > 0),]
+B1_90_fixed <- B1_90[(B1_90$X90 == 1),]
+
+B2 <- metagenomes[(metagenomes$Population == "B2"),]
+B2_17 <- B2[(B2$X17 > 0),]
+B2_17_fixed <- B2_17[(B2_17$X17 == 1),]
+B2_25 <- B2[(B2$X25 > 0),]
+B2_25_fixed <- B2_25[(B2_25$X25 == 1),]
+B2_44 <- B2[(B2$X44 > 0),]
+B2_44_fixed <- B2_44[(B2_44$X44 == 1),]
+B2_66 <- B2[(B2$X66 > 0),]
+B2_66_fixed <- B2_66[(B2_66$X66 == 1),]
+B2_75 <- B2[(B2$X75 > 0),]
+B2_75_fixed <- B2_75[(B2_75$X75 == 1),]
+B2_90 <- B2[(B2$X90 > 0),]
+B2_90_fixed <- B2_90[(B2_90$X90 == 1),]
+
+
+B3 <- metagenomes[(metagenomes$Population == "B3"),]
+B3_17 <- B3[(B3$X17 > 0),]
+B3_17_fixed <- B3_17[(B3_17$X17 == 1),]
+B3_25 <- B3[(B3$X25 > 0),]
+B3_25_fixed <- B3_25[(B3_25$X25 == 1),]
+B3_44 <- B3[(B3$X44 > 0),]
+B3_44_fixed <- B3_44[(B3_44$X44 == 1),]
+B3_66 <- B3[(B3$X66 > 0),]
+B3_66_fixed <- B3_66[(B3_66$X66 == 1),]
+B3_75 <- B3[(B3$X75 > 0),]
+B3_75_fixed <- B3_75[(B3_75$X75 == 1),]
+B3_90 <- B3[(B3$X90 > 0),]
+B3_90_fixed <- B3_90[(B3_90$X90 == 1),]
+
+
+P1 <- metagenomes[(metagenomes$Population == "P1"),]
+P1_17 <- P1[(P1$X17 > 0),]
+P1_17_fixed <- P1_17[(P1_17$X17 == 1),]
+P1_44 <- P1[(P1$X44 > 0),]
+P1_44_fixed <- P1_44[(P1_44$X44 == 1),]
+P1_66 <- P1[(P1$X66 > 0),]
+P1_66_fixed <- P1_66[(P1_66$X66 == 1),]
+P1_90 <- P1[(P1$X90 > 0),]
+P1_90_fixed <- P1_90[(P1_90$X90 == 1),]
+
+
+P2 <- metagenomes[(metagenomes$Population == "P2"),]
+P2_17 <- P2[(P2$X17 > 0),]
+P2_17_fixed <- P2_17[(P2_17$X17 == 1),]
+P2_44 <- P2[(P2$X44 > 0),]
+P2_44_fixed <- P2_44[(P2_44$X44 == 1),]
+P2_66 <- P2[(P2$X66 > 0),]
+P2_66_fixed <- P2_66[(P2_66$X66 == 1),]
+P2_90 <- P2[(P2$X90 > 0),]
+P2_90_fixed <- P2_90[(P2_90$X90 == 1),]
+
+
+P3 <- metagenomes[(metagenomes$Population == "P3"),]
+P3_17 <- P3[(P3$X17 > 0),]
+P3_17_fixed <- P3_17[(P3_17$X17 == 1),]
+P3_44 <- P3[(P3$X44 > 0),]
+P3_44_fixed <- P3_44[(P3_44$X44 == 1),]
+P3_66 <- P3[(P3$X66 > 0),]
+P3_66_fixed <- P3_66[(P3_66$X66 == 1),]
+P3_90 <- P3[(P3$X90 > 0),]
+P3_90_fixed <- P3_90[(P3_90$X90 == 1),]
 
